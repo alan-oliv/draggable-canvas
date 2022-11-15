@@ -1,8 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import AppLayout from './components/AppLayout'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import AppLayout from './components/AppLayout';
 
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -19,13 +19,13 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
   }
-`
+`;
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <React.StrictMode>
     <GlobalStyle />
     <AppLayout />
   </React.StrictMode>,
-)
+);

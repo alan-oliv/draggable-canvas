@@ -1,3 +1,3 @@
-import DraggableCanvas from './DraggableCanvas'
+import DraggableCanvas from './DraggableCanvas';
 
-export default DraggableCanvas
+export default DraggableCanvas;
