@@ -15,17 +15,6 @@ const CanvasContainer = styled.div<CanvasContainerProps>`
   border-radius: 10px;
   overflow: hidden;
 
-  cursor: move;
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-
-  :active {
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
-  }
-
   ${(p) =>
     p.loadingCanvas &&
     `
@@ -136,11 +125,13 @@ const DraggableCanvas = ({
     if (dragging) {
       window.addEventListener('mousemove', onMouseMove);
       window.addEventListener('mouseup', () => setDragging(false));
+      document.body.classList.add('dragging-cursor');
     }
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', () => setDragging(false));
+      document.body.classList.remove('dragging-cursor');
     };
   }, [dragging, onMouseMove]);
 

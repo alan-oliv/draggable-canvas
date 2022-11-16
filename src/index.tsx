@@ -19,6 +19,19 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
   }
+
+  .dragging-cursor {
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+
+    :active {
+      cursor: grabbing;
+      cursor: -moz-grabbing;
+      cursor: -webkit-grabbing;
+    }
+  }
 `;
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
