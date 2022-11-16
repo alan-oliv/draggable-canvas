@@ -3,8 +3,9 @@
 
 # Draggable Canvas
 
-The Canvas API provides a means for drawing graphics via JavaScript and the HTML canvas element. Among other things, it can be used for animation, game graphics, data visualization, photo manipulation, and real-time video processing.
+You can see it running [here](https://alan-oliv.github.io/draggable-canvas/) 🚀
 
+The Canvas API provides a means for drawing graphics via JavaScript and the HTML canvas element. Among other things, it can be used for animation, game graphics, data visualization, photo manipulation, and real-time video processing.
 This repo is a study on how [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) element behaves working alongside [ReactJS](https://https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
 
 ## Getting started
@@ -80,3 +81,8 @@ It's responsibility is to calculate and do everything that relates to image and 
 | Props | Type   | Required | Description                                     | Default |
 | ----- | ------ | -------- | ----------------------------------------------- | ------- |
 | `src` | string | true     | contains the path to the image you want to draw | -       |
+
+## Deploy
+
+This repo uses [Github Pages](https://pages.github.com/) for deploying the application.\
+You can see it running [here](https://alan-oliv.github.io/draggable-canvas/). and, If you really need, these are the [builded files](https://github.com/alan-oliv/draggable-canvas/tree/gh-pages) that we use for it :)
