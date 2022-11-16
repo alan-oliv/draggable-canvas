@@ -14,10 +14,10 @@ const AppLayout = (): JSX.Element => {
   return (
     <CenterContainer>
       <DraggableCanvas width={640} height={400}>
-        <DraggableCanvasImage src='http://challenge.publitas.com/images/0.jpg' />
-        <DraggableCanvasImage src='http://challenge.publitas.com/images/1.jpg' />
-        <DraggableCanvasImage src='http://challenge.publitas.com/images/2.jpg' />
-        <DraggableCanvasImage src='http://challenge.publitas.com/images/3.jpg' />
+        <DraggableCanvasImage src='https://challenge.publitas.com/images/0.jpg' />
+        <DraggableCanvasImage src='https://challenge.publitas.com/images/1.jpg' />
+        <DraggableCanvasImage src='https://challenge.publitas.com/images/2.jpg' />
+        <DraggableCanvasImage src='https://challenge.publitas.com/images/3.jpg' />
       </DraggableCanvas>
     </CenterContainer>
   );
