@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { CanvasImage } from './Image/DraggableCanvasImage';
+import { ASSETS_URL } from '../../constants';
 
 type CanvasContainerProps = {
   width: number;
@@ -18,7 +19,7 @@ const CanvasContainer = styled.div<CanvasContainerProps>`
   ${(p) =>
     p.loadingCanvas &&
     `
-      background-image: url('./loading.gif');
+      background-image: url('${ASSETS_URL}/loading.gif');
       background-repeat: no-repeat;
       background-position: center;
     `}
