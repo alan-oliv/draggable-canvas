@@ -1,19 +1,42 @@
 export type DraggableCanvasImageProps = {
   src: string;
-  canvas?: number;
+  canvasWidth?: number;
+  canvasHeight?: number;
 };
 
-const DraggableCanvasImage = ({ src }: DraggableCanvasImageProps): JSX.Element => {
+export type CanvasImage = {
+  imageElement: HTMLImageElement;
+  ratio: number;
+  horizontalCenter: number;
+  verticalCenter: number;
+};
+
+const DraggableCanvasImage = ({
+  src,
+  canvasWidth = 640,
+  canvasHeight = 400,
+}: DraggableCanvasImageProps): JSX.Element => {
   const image = new Image();
   image.src = src;
 
-  const imagePromise = new Promise<HTMLImageElement>((resolve) => {
+  const imagePromise = new Promise<CanvasImage>((resolve) => {
     image.onload = () => {
-      resolve(image);
+      const ratio = Math.min(canvasWidth / image.width, canvasHeight / image.height);
+      const horizontalCenter = (canvasWidth - image.width * ratio) / 2;
+      const verticalCenter = (canvasHeight - image.height * ratio) / 2;
+
+      const imageProperties: CanvasImage = {
+        imageElement: image,
+        ratio,
+        horizontalCenter,
+        verticalCenter,
+      };
+
+      resolve(imageProperties);
     };
   });
 
-  return <div data-image={imagePromise} />;
+  return <div data-promise={imagePromise} />;
 };
 
 export default DraggableCanvasImage;

@@ -1,15 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { CanvasImage } from './Image/DraggableCanvasImage';
 
 type CanvasContainerProps = {
   width: number;
   height: number;
   loadingCanvas: boolean;
 };
+
 const CanvasContainer = styled.div<CanvasContainerProps>`
   width: ${(p) => p.width}px;
   height: ${(p) => p.height}px;
   background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
 
   ${(p) =>
     p.loadingCanvas &&
@@ -33,7 +37,7 @@ const DraggableCanvas = ({
 }: DraggableCanvasProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [loading, setLoading] = useState(true);
-  const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const [images, setImages] = useState<CanvasImage[]>([]);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -47,19 +51,30 @@ const DraggableCanvas = ({
     }
 
     images.forEach((image, index) => {
-      ctx.fillStyle = 'red';
+      const { imageElement, ratio, horizontalCenter, verticalCenter } = image;
       ctx.fillRect(index * width, 0, width, height);
+      ctx.drawImage(
+        imageElement,
+        0,
+        0,
+        imageElement.width,
+        imageElement.height,
+        index * width + horizontalCenter,
+        verticalCenter,
+        imageElement.width * ratio,
+        imageElement.height * ratio,
+      );
     });
-  }, []);
+  }, [images]);
 
   const load = useCallback(() => {
     if (children) {
-      const imageQueue: Promise<HTMLImageElement>[] = [];
+      const imageQueue: Promise<CanvasImage>[] = [];
       const childrens = Array.isArray(children) ? children : [children];
 
       childrens.forEach((element) => {
-        const el = element.type({ src: element.props.src });
-        const imagePromise = el.props['data-image'];
+        const imageElement = element.type({ src: element.props.src });
+        const imagePromise = imageElement.props['data-promise'];
         imageQueue.push(imagePromise);
       });
 
