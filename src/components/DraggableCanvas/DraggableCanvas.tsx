@@ -39,12 +39,14 @@ type DraggableCanvasProps = {
   width?: number;
   height?: number;
   children: React.ReactNode;
+  dragSpeed?: 1 | 2 | 3 | 4 | 5;
 };
 
 const DraggableCanvas = ({
   width = 300,
   height = 150,
   children,
+  dragSpeed = 1,
 }: DraggableCanvasProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -110,7 +112,7 @@ const DraggableCanvas = ({
       const canvasContext = canvasRef.current?.getContext('2d');
 
       if (canvasContext) {
-        const xDiff = e.movementX;
+        const xDiff = e.movementX * dragSpeed;
 
         const transformedMatrix = canvasContext.getTransform();
         const allImagesWidth = (images.length - 1) * width;
