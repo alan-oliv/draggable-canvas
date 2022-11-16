@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import DraggableCanvas from '../DraggableCanvas';
+import DraggableCanvasImage from '../DraggableCanvas/Image';
 
 const CenterContainer = styled.div`
   display: flex;
@@ -9,10 +10,15 @@ const CenterContainer = styled.div`
   height: 100%;
 `;
 
-const AppLayout = () => {
+const AppLayout = (): JSX.Element => {
   return (
     <CenterContainer>
-      <DraggableCanvas width={640} height={400} />
+      <DraggableCanvas width={640} height={400}>
+        <DraggableCanvasImage src='http://challenge.publitas.com/images/0.jpg' />
+        <DraggableCanvasImage src='http://challenge.publitas.com/images/1.jpg' />
+        <DraggableCanvasImage src='http://challenge.publitas.com/images/2.jpg' />
+        <DraggableCanvasImage src='http://challenge.publitas.com/images/3.jpg' />
+      </DraggableCanvas>
     </CenterContainer>
   );
 };

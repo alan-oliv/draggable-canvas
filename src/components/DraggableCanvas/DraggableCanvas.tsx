@@ -1,24 +1,39 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 type CanvasContainerProps = {
   width: number;
   height: number;
+  loadingCanvas: boolean;
 };
 const CanvasContainer = styled.div<CanvasContainerProps>`
   width: ${(p) => p.width}px;
   height: ${(p) => p.height}px;
-  background-color: #cccccc;
+  background-color: #ffffff;
+
+  ${(p) =>
+    p.loadingCanvas &&
+    `
+      background-image: url('./loading.gif');
+      background-repeat: no-repeat;
+      background-position: center;
+    `}
 `;
 
 type DraggableCanvasProps = {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
+  children: React.ReactNode;
 };
 
-const DraggableCanvas = ({ width, height }: DraggableCanvasProps) => {
+const DraggableCanvas = ({
+  width = 300,
+  height = 150,
+  children,
+}: DraggableCanvasProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const images = [{ color: 'blue' }, { color: 'red' }, { color: 'green' }];
+  const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState<HTMLImageElement[]>([]);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -32,19 +47,39 @@ const DraggableCanvas = ({ width, height }: DraggableCanvasProps) => {
     }
 
     images.forEach((image, index) => {
-      ctx.fillStyle = image.color;
+      ctx.fillStyle = 'red';
       ctx.fillRect(index * width, 0, width, height);
     });
   }, []);
 
-  useEffect(() => {
-    if (canvasRef) {
-      draw();
+  const load = useCallback(() => {
+    if (children) {
+      const imageQueue: Promise<HTMLImageElement>[] = [];
+      const childrens = Array.isArray(children) ? children : [children];
+
+      childrens.forEach((element) => {
+        const el = element.type({ src: element.props.src });
+        const imagePromise = el.props['data-image'];
+        imageQueue.push(imagePromise);
+      });
+
+      Promise.all(imageQueue).then((images) => {
+        setImages(images);
+        setLoading(false);
+      });
     }
-  }, [canvasRef]);
+  }, [children]);
+
+  useEffect(() => {
+    if (canvasRef && !loading) {
+      draw();
+    } else {
+      load();
+    }
+  }, [canvasRef, loading, draw, load]);
 
   return (
-    <CanvasContainer width={width} height={height}>
+    <CanvasContainer width={width} height={height} loadingCanvas={loading}>
       <canvas ref={canvasRef} width={width} height={height} />
     </CanvasContainer>
   );
