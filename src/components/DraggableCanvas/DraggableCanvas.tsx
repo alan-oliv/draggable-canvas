@@ -73,7 +73,11 @@ const DraggableCanvas = ({
       const childrens = Array.isArray(children) ? children : [children];
 
       childrens.forEach((element) => {
-        const imageElement = element.type({ src: element.props.src });
+        const imageElement = element.type({
+          src: element.props.src,
+          canvasWidth: width,
+          canvasHeight: height,
+        });
         const imagePromise = imageElement.props['data-promise'];
         imageQueue.push(imagePromise);
       });

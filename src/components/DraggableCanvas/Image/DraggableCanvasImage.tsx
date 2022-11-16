@@ -13,8 +13,8 @@ export type CanvasImage = {
 
 const DraggableCanvasImage = ({
   src,
-  canvasWidth = 640,
-  canvasHeight = 400,
+  canvasWidth = 300,
+  canvasHeight = 150,
 }: DraggableCanvasImageProps): JSX.Element => {
   const image = new Image();
   image.src = src;
