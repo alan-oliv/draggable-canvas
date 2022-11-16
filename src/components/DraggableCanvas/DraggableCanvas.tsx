@@ -15,17 +15,6 @@ const CanvasContainer = styled.div<CanvasContainerProps>`
   border-radius: 10px;
   overflow: hidden;
 
-  cursor: move;
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-
-  :active {
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
-  }
-
   ${(p) =>
     p.loadingCanvas &&
     `
@@ -39,12 +28,14 @@ type DraggableCanvasProps = {
   width?: number;
   height?: number;
   children: React.ReactNode;
+  dragSpeed?: 1 | 2 | 3 | 4 | 5;
 };
 
 const DraggableCanvas = ({
   width = 300,
   height = 150,
   children,
+  dragSpeed = 1,
 }: DraggableCanvasProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -110,7 +101,7 @@ const DraggableCanvas = ({
       const canvasContext = canvasRef.current?.getContext('2d');
 
       if (canvasContext) {
-        const xDiff = e.movementX;
+        const xDiff = e.movementX * dragSpeed;
 
         const transformedMatrix = canvasContext.getTransform();
         const allImagesWidth = (images.length - 1) * width;
@@ -134,11 +125,13 @@ const DraggableCanvas = ({
     if (dragging) {
       window.addEventListener('mousemove', onMouseMove);
       window.addEventListener('mouseup', () => setDragging(false));
+      document.body.classList.add('dragging-cursor');
     }
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', () => setDragging(false));
+      document.body.classList.remove('dragging-cursor');
     };
   }, [dragging, onMouseMove]);
 
