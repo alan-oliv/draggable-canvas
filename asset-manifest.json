@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/draggable-canvas/static/js/main.f20048dc.js",
+    "main.js": "/draggable-canvas/static/js/main.7431d6e1.js",
     "index.html": "/draggable-canvas/index.html",
-    "main.f20048dc.js.map": "/draggable-canvas/static/js/main.f20048dc.js.map"
+    "main.7431d6e1.js.map": "/draggable-canvas/static/js/main.7431d6e1.js.map"
   },
   "entrypoints": [
-    "static/js/main.f20048dc.js"
+    "static/js/main.7431d6e1.js"
   ]
 }
