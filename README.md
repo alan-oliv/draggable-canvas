@@ -1,12 +1,19 @@
-# Getting Started with Create React App
+![draggable-canvas-logo-light](./docs/readme-light.png#gh-light-mode-only)
+![draggable-canvas-logo-dark](./docs/readme-dark.png#gh-dark-mode-only)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Draggable Canvas
 
-## Available Scripts
+The Canvas API provides a means for drawing graphics via JavaScript and the HTML canvas element. Among other things, it can be used for animation, game graphics, data visualization, photo manipulation, and real-time video processing.
 
-In the project directory, you can run:
+This repo is a study on how [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) element behaves working alongside [ReactJS](https://https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
 
-### `npm start`
+## Getting started
+
+This is a simple [Create React App](https://create-react-app.dev/), that implements a canvas image slider, that lets you drag to change images.
+
+To start or build the application just run the scripts found in `package.json`:
+
+#### `yarn start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -14,12 +21,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
+#### `yarn build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -27,20 +29,54 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Architecture
 
-### `npm run eject`
+Since the project is very simple, the architecture is very straigh-forward for now, containing just the `components` folder which is the most important one
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Compound components pattern
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+I wanted to introduce this pattern here to give a 'react' face to canvas element (which is standalone)
+The idea is that you have two or more components that work together to accomplish a useful task. Typically one component is the parent, and the other is the child. The objective is to provide a more expressive and flexible API.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+What we'll achieve here, is a better API.
+Let's take the example of the `select` html component, image that instead of having:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+<select>
+  <option value="value1">key1</option>
+  <option value="value2">key2</option>
+  <option value="value3">key3</option>
+</select>
+```
 
-## Learn More
+We had:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+<select options="key1:value1;key2:value2;key3:value3"></select>
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Which is an awful API** - That's what we want to avoid with the canvas element, when implementing this pattern.
+
+Instead of passing a prop that receives an image array (which is completely not extandable and hard to maintain) we'll pass image child nodes.
+
+#### Components
+
+##### DraggableCanvas
+
+This component is the parent component that is responsible for canvas context and drawing
+
+| Props       | Type      | Required | Description                                           | Default |
+| ----------- | --------- | -------- | ----------------------------------------------------- | ------- |
+| `width`     | number    | false    | specifies the width of the canvas element, in pixels  | 300     |
+| `height`    | number    | false    | specifies the height of the canvas element, in pixels | 150     |
+| `children`  | ReactNode | true     | Images to be drawn in canvas element                  | null    |
+| `dragSpeed` | number    | false    | prop name speaks for itself 😄                        |
+
+##### DraggableCanvasImage
+
+This is the child component, which only works inside his main parent.
+It's responsibility is to calculate and do everything that relates to image and it's size and ratio
+
+| Props | Type   | Required | Description                                     | Default |
+| ----- | ------ | -------- | ----------------------------------------------- | ------- |
+| `src` | string | true     | contains the path to the image you want to draw | -       |
