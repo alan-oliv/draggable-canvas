@@ -15,6 +15,17 @@ const CanvasContainer = styled.div<CanvasContainerProps>`
   border-radius: 10px;
   overflow: hidden;
 
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+
+  :active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+  }
+
   ${(p) =>
     p.loadingCanvas &&
     `
@@ -36,8 +47,33 @@ const DraggableCanvas = ({
   children,
 }: DraggableCanvasProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [loading, setLoading] = useState(true);
+
   const [images, setImages] = useState<CanvasImage[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [dragging, setDragging] = useState<boolean>(false);
+
+  const load = useCallback(() => {
+    if (children) {
+      const imageQueue: Promise<CanvasImage>[] = [];
+      const childrens = Array.isArray(children) ? children : [children];
+
+      childrens.forEach((element) => {
+        const imageElement = element.type({
+          src: element.props.src,
+          canvasWidth: width,
+          canvasHeight: height,
+        });
+
+        const imagePromise = imageElement.props['data-promise'];
+        imageQueue.push(imagePromise);
+      });
+
+      Promise.all(imageQueue).then((images) => {
+        setImages(images);
+        setLoading(false);
+      });
+    }
+  }, [children]);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -45,15 +81,17 @@ const DraggableCanvas = ({
       return;
     }
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
+    const canvasContext = canvas.getContext('2d');
+    if (!canvasContext) {
       return;
     }
 
     images.forEach((image, index) => {
       const { imageElement, ratio, horizontalCenter, verticalCenter } = image;
-      ctx.fillRect(index * width, 0, width, height);
-      ctx.drawImage(
+
+      canvasContext.fillStyle = '#ffffff';
+      canvasContext.fillRect(index * width, 0, width, height);
+      canvasContext.drawImage(
         imageElement,
         0,
         0,
@@ -67,27 +105,42 @@ const DraggableCanvas = ({
     });
   }, [images]);
 
-  const load = useCallback(() => {
-    if (children) {
-      const imageQueue: Promise<CanvasImage>[] = [];
-      const childrens = Array.isArray(children) ? children : [children];
+  const onMouseMove = useCallback(
+    (e: MouseEvent) => {
+      const canvasContext = canvasRef.current?.getContext('2d');
 
-      childrens.forEach((element) => {
-        const imageElement = element.type({
-          src: element.props.src,
-          canvasWidth: width,
-          canvasHeight: height,
-        });
-        const imagePromise = imageElement.props['data-promise'];
-        imageQueue.push(imagePromise);
-      });
+      if (canvasContext) {
+        const xDiff = e.movementX;
 
-      Promise.all(imageQueue).then((images) => {
-        setImages(images);
-        setLoading(false);
-      });
+        const transformedMatrix = canvasContext.getTransform();
+        const allImagesWidth = (images.length - 1) * width;
+        const isfirstImageLimit = transformedMatrix.e + xDiff > 0;
+        const isLastImageLimit = transformedMatrix.e + xDiff < -allImagesWidth;
+
+        if (isfirstImageLimit || isLastImageLimit) {
+          return;
+        }
+
+        canvasContext.clearRect(0, 0, width, height);
+        canvasContext.translate(xDiff, 0);
+
+        draw();
+      }
+    },
+    [draw, images],
+  );
+
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', () => setDragging(false));
     }
-  }, [children]);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', () => setDragging(false));
+    };
+  }, [dragging, onMouseMove]);
 
   useEffect(() => {
     if (canvasRef && !loading) {
@@ -99,7 +152,7 @@ const DraggableCanvas = ({
 
   return (
     <CanvasContainer width={width} height={height} loadingCanvas={loading}>
-      <canvas ref={canvasRef} width={width} height={height} />
+      <canvas ref={canvasRef} width={width} height={height} onMouseDown={() => setDragging(true)} />
     </CanvasContainer>
   );
 };
