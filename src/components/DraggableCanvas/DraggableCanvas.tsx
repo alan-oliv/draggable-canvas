@@ -81,17 +81,17 @@ const DraggableCanvas = ({
       return;
     }
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
+    const canvasContext = canvas.getContext('2d');
+    if (!canvasContext) {
       return;
     }
 
     images.forEach((image, index) => {
       const { imageElement, ratio, horizontalCenter, verticalCenter } = image;
 
-      ctx.fillStyle = 'white';
-      ctx.fillRect(index * width, 0, width, height);
-      ctx.drawImage(
+      canvasContext.fillStyle = '#ffffff';
+      canvasContext.fillRect(index * width, 0, width, height);
+      canvasContext.drawImage(
         imageElement,
         0,
         0,
@@ -107,22 +107,22 @@ const DraggableCanvas = ({
 
   const onMouseMove = useCallback(
     (e: MouseEvent) => {
-      const ctx = canvasRef.current?.getContext('2d');
+      const canvasContext = canvasRef.current?.getContext('2d');
 
-      if (ctx) {
-        const movX = e.movementX;
+      if (canvasContext) {
+        const xDiff = e.movementX;
 
-        const transformedMatrix = ctx.getTransform();
+        const transformedMatrix = canvasContext.getTransform();
         const allImagesWidth = (images.length - 1) * width;
-        const isfirstImageLimit = transformedMatrix.e + movX > 0;
-        const isLastImageLimit = transformedMatrix.e + movX < -allImagesWidth;
+        const isfirstImageLimit = transformedMatrix.e + xDiff > 0;
+        const isLastImageLimit = transformedMatrix.e + xDiff < -allImagesWidth;
 
         if (isfirstImageLimit || isLastImageLimit) {
           return;
         }
 
-        ctx.clearRect(0, 0, width, height);
-        ctx.translate(movX, 0);
+        canvasContext.clearRect(0, 0, width, height);
+        canvasContext.translate(xDiff, 0);
 
         draw();
       }
