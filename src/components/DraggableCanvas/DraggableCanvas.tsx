@@ -39,6 +39,28 @@ const DraggableCanvas = ({
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState<CanvasImage[]>([]);
 
+  const load = useCallback(() => {
+    if (children) {
+      const imageQueue: Promise<CanvasImage>[] = [];
+      const childrens = Array.isArray(children) ? children : [children];
+
+      childrens.forEach((element) => {
+        const imageElement = element.type({
+          src: element.props.src,
+          canvasWidth: width,
+          canvasHeight: height,
+        });
+        const imagePromise = imageElement.props['data-promise'];
+        imageQueue.push(imagePromise);
+      });
+
+      Promise.all(imageQueue).then((images) => {
+        setImages(images);
+        setLoading(false);
+      });
+    }
+  }, [children]);
+
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -66,28 +88,6 @@ const DraggableCanvas = ({
       );
     });
   }, [images]);
-
-  const load = useCallback(() => {
-    if (children) {
-      const imageQueue: Promise<CanvasImage>[] = [];
-      const childrens = Array.isArray(children) ? children : [children];
-
-      childrens.forEach((element) => {
-        const imageElement = element.type({
-          src: element.props.src,
-          canvasWidth: width,
-          canvasHeight: height,
-        });
-        const imagePromise = imageElement.props['data-promise'];
-        imageQueue.push(imagePromise);
-      });
-
-      Promise.all(imageQueue).then((images) => {
-        setImages(images);
-        setLoading(false);
-      });
-    }
-  }, [children]);
 
   useEffect(() => {
     if (canvasRef && !loading) {
