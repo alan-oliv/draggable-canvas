@@ -10,7 +10,7 @@ This repo is a study on how [Canvas](https://developer.mozilla.org/en-US/docs/We
 
 ## Getting started
 
-This is a simple [Create React App](https://create-react-app.dev/), that implements a canvas image slider, that lets you drag to change images.
+This is a simple [Create React App](https://create-react-app.dev/) that implements a canvas image slider, that lets you drag to change images.
 
 To start or build the application just run the scripts found in `package.json`:
 
@@ -40,7 +40,7 @@ I wanted to introduce this pattern here to give a 'react' face to canvas element
 The idea is that you have two or more components that work together to accomplish a useful task. Typically one component is the parent, and the other is the child. The objective is to provide a more expressive and flexible API.
 
 What we'll achieve here, is a better API.
-Let's take the example of the `select` html component, image that instead of having:
+Let's take the example of the `select` html component, imagine that instead of having:
 
 ```
 <select>
@@ -56,7 +56,7 @@ We had:
 <select options="key1:value1;key2:value2;key3:value3"></select>
 ```
 
-**Which is an awful API** - That's what we want to avoid with the canvas element, when implementing this pattern.
+**What an awful API, right?** - That's what we want to avoid with the canvas element, when implementing this pattern.
 
 Instead of passing a prop that receives an image array (which is completely not extandable and hard to maintain) we'll pass image child nodes.
 
