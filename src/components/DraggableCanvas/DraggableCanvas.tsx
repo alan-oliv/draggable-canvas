@@ -77,6 +77,34 @@ const DraggableCanvas = ({
     });
   }, [height, images, width, canvasLoader]);
 
+  const drawImages = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const canvasContext = canvas.getContext('2d');
+    if (!canvasContext) {
+      return;
+    }
+
+    loadedImages.forEach((image) => {
+      const { id, imageElement, ratio, horizontalCenter, verticalCenter } = image;
+
+      canvasContext.drawImage(
+        imageElement,
+        0,
+        0,
+        imageElement.width,
+        imageElement.height,
+        id * width + horizontalCenter,
+        verticalCenter,
+        imageElement.width * ratio,
+        imageElement.height * ratio,
+      );
+    });
+  }, [loadedImages, width]);
+
   const lazyLoadImages = useCallback(
     (quantity: number, startingFrom: number) => {
       if (!loading) {
@@ -115,38 +143,12 @@ const DraggableCanvas = ({
           setLoadedImages([...loadedImages, ...images]);
           setLoading(false);
         });
+      } else {
+        drawImages();
       }
     },
-    [height, images, loadedImages, loading, setLoadedImages, setLoading, width],
+    [drawImages, height, images, loadedImages, loading, setLoadedImages, setLoading, width],
   );
-
-  const drawImages = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-
-    const canvasContext = canvas.getContext('2d');
-    if (!canvasContext) {
-      return;
-    }
-
-    loadedImages.forEach((image) => {
-      const { id, imageElement, ratio, horizontalCenter, verticalCenter } = image;
-
-      canvasContext.drawImage(
-        imageElement,
-        0,
-        0,
-        imageElement.width,
-        imageElement.height,
-        id * width + horizontalCenter,
-        verticalCenter,
-        imageElement.width * ratio,
-        imageElement.height * ratio,
-      );
-    });
-  }, [loadedImages, width]);
 
   const onMouseMove = useCallback(
     (e: MouseEvent) => {
