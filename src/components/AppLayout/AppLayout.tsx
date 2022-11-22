@@ -21,7 +21,13 @@ const AppLayout = (): JSX.Element => {
 
   return (
     <CenterContainer>
-      <DraggableCanvas width={640} height={400} initialPreloadQuantity={2} preloadQuantity={1}>
+      <DraggableCanvas
+        width={640}
+        height={400}
+        initialPreloadQuantity={2}
+        preloadQuantity={1}
+        dragSpeed={2}
+      >
         {imagesFromApi.map((url, index) => (
           <DraggableCanvasImage key={`image-${index}`} src={url} />
         ))}
