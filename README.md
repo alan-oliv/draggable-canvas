@@ -66,12 +66,14 @@ Instead of passing a prop that receives an image array (which is completely not 
 
 This component is the parent component that is responsible for canvas context and drawing
 
-| Props       | Type      | Required | Description                                           | Default |
-| ----------- | --------- | -------- | ----------------------------------------------------- | ------- |
-| `width`     | number    | false    | specifies the width of the canvas element, in pixels  | 300     |
-| `height`    | number    | false    | specifies the height of the canvas element, in pixels | 150     |
-| `children`  | ReactNode | true     | Images to be drawn in canvas element                  | null    |
-| `dragSpeed` | number    | false    | prop name speaks for itself 😄                        |
+| Props                    | Type      | Required | Description                                           | Default |
+| ------------------------ | --------- | -------- | ----------------------------------------------------- | ------- |
+| `width`                  | number    | false    | specifies the width of the canvas element, in pixels  | 300     |
+| `height`                 | number    | false    | specifies the height of the canvas element, in pixels | 150     |
+| `children`               | ReactNode | true     | Images to be drawn in canvas element                  | null    |
+| `dragSpeed`              | number    | false    | prop name speaks for itself 😄                        | 1       |
+| `initialPreloadQuantity` | number    | false    | Number of images that will pre-load at the first load | 2       |
+| `preloadQuantity`        | number    | false    | Number of images you want to load ahead (as you drag) | 1       |
 
 ##### DraggableCanvasImage
 
