@@ -23,7 +23,8 @@
     "camelcase": "error",
     "spaced-comment": "error",
     "quotes": ["error", "single"],
-    "no-duplicate-imports": "error"
+    "no-duplicate-imports": "error",
+    "react-hooks/exhaustive-deps": "error"
   },
   "settings": {
     "react": {

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import { ASSETS_URL } from '../../constants';
 import DraggableCanvas from '../DraggableCanvas';
 import DraggableCanvasImage from '../DraggableCanvas/Image';
-import { ASSETS_URL } from '../../constants';
 
 const CenterContainer = styled.div`
   display: flex;
@@ -12,13 +12,19 @@ const CenterContainer = styled.div`
 `;
 
 const AppLayout = (): JSX.Element => {
+  const imagesFromApi: string[] = [
+    `${ASSETS_URL}/images/0.jpg`,
+    `${ASSETS_URL}/images/1.jpg`,
+    `${ASSETS_URL}/images/2.jpg`,
+    `${ASSETS_URL}/images/3.jpg`,
+  ];
+
   return (
     <CenterContainer>
-      <DraggableCanvas width={640} height={400}>
-        <DraggableCanvasImage src={`${ASSETS_URL}/images/0.jpg`} />
-        <DraggableCanvasImage src={`${ASSETS_URL}/images/1.jpg`} />
-        <DraggableCanvasImage src={`${ASSETS_URL}/images/2.jpg`} />
-        <DraggableCanvasImage src={`${ASSETS_URL}/images/3.jpg`} />
+      <DraggableCanvas width={640} height={400} preloadQuantity={2}>
+        {imagesFromApi.map((url, index) => (
+          <DraggableCanvasImage key={`image-${index}`} src={url} />
+        ))}
       </DraggableCanvas>
     </CenterContainer>
   );

@@ -1,17 +1,27 @@
+import { ReactElement } from 'react';
+
 export type DraggableCanvasImageProps = {
+  id?: number;
   src: string;
   canvasWidth?: number;
   canvasHeight?: number;
 };
 
 export type CanvasImage = {
+  id: number;
   imageElement: HTMLImageElement;
   ratio: number;
   horizontalCenter: number;
   verticalCenter: number;
 };
 
+export type RawImage = {
+  id: number;
+  element: ReactElement<DraggableCanvasImageProps>;
+};
+
 const DraggableCanvasImage = ({
+  id = 0,
   src,
   canvasWidth = 300,
   canvasHeight = 150,
@@ -26,6 +36,7 @@ const DraggableCanvasImage = ({
       const verticalCenter = (canvasHeight - image.height * ratio) / 2;
 
       const imageProperties: CanvasImage = {
+        id,
         imageElement: image,
         ratio,
         horizontalCenter,
