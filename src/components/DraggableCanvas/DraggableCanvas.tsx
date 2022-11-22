@@ -29,6 +29,7 @@ type DraggableCanvasProps = {
   height?: number;
   children: ReactElement<DraggableCanvasImageProps> | ReactElement<DraggableCanvasImageProps>[];
   dragSpeed?: 1 | 2 | 3 | 4 | 5;
+  initialPreloadQuantity?: number;
   preloadQuantity?: number;
 };
 
@@ -37,7 +38,8 @@ const DraggableCanvas = ({
   height = 150,
   children,
   dragSpeed = 1,
-  preloadQuantity = 2,
+  initialPreloadQuantity = 2,
+  preloadQuantity = 1,
 }: DraggableCanvasProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [loadedImages, setLoadedImages] = useState<CanvasImage[]>([]);
@@ -212,9 +214,9 @@ const DraggableCanvas = ({
   useEffect(() => {
     if (canvasRef && loadedImages.length === 0) {
       renderCanvas();
-      lazyLoadImages(preloadQuantity, 0);
+      lazyLoadImages(initialPreloadQuantity, 0);
     }
-  }, [canvasRef, lazyLoadImages, loadedImages, preloadQuantity, renderCanvas]);
+  }, [canvasRef, lazyLoadImages, loadedImages, initialPreloadQuantity, renderCanvas]);
 
   return (
     <CanvasContainer width={width} height={height}>
