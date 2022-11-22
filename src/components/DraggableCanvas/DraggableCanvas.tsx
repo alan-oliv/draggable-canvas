@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 import styled from 'styled-components';
+import { ASSETS_URL } from '../../constants';
 import { CanvasImage, DraggableCanvasImageProps, RawImage } from './Image/DraggableCanvasImage';
 
 type CanvasContainerProps = {
@@ -42,6 +43,8 @@ const DraggableCanvas = ({
   preloadQuantity = 1,
 }: DraggableCanvasProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const [canvasLoader, setCanvasLoader] = useState<HTMLImageElement | null>(null);
   const [loadedImages, setLoadedImages] = useState<CanvasImage[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [dragging, setDragging] = useState<boolean>(false);
@@ -62,8 +65,17 @@ const DraggableCanvas = ({
     images.forEach((_, index) => {
       canvasContext.fillStyle = '#ffffff';
       canvasContext.fillRect(index * width, 0, width, height);
+
+      const canvasLoaderImage = canvasLoader as HTMLImageElement;
+      canvasContext.drawImage(
+        canvasLoaderImage,
+        index * width + width / 2 - canvasLoaderImage.width / 2,
+        height / 2 - canvasLoaderImage.height / 2,
+        canvasLoaderImage.width,
+        canvasLoaderImage.height,
+      );
     });
-  }, [height, images, width]);
+  }, [height, images, width, canvasLoader]);
 
   const lazyLoadImages = useCallback(
     (quantity: number, startingFrom: number) => {
@@ -198,6 +210,10 @@ const DraggableCanvas = ({
   }, [loadedImages, drawImages]);
 
   useEffect(() => {
+    if (loadedImages.length === 0) {
+      return;
+    }
+
     if (dragging) {
       window.addEventListener('mousemove', onMouseMove);
       window.addEventListener('mouseup', () => setDragging(false));
@@ -209,14 +225,23 @@ const DraggableCanvas = ({
       window.removeEventListener('mouseup', () => setDragging(false));
       document.body.classList.remove('dragging-cursor');
     };
-  }, [dragging, onMouseMove]);
+  }, [dragging, onMouseMove, loadedImages]);
 
   useEffect(() => {
-    if (canvasRef && loadedImages.length === 0) {
+    if (!canvasLoader) {
+      const canvasLoaderImage = new Image();
+      canvasLoaderImage.src = `${ASSETS_URL}/loading.png`;
+      canvasLoaderImage.onload = () => {
+        setCanvasLoader(canvasLoaderImage);
+      };
+      return;
+    }
+
+    if (canvasRef && canvasLoader && loadedImages.length === 0) {
       renderCanvas();
       lazyLoadImages(initialPreloadQuantity, 0);
     }
-  }, [canvasRef, lazyLoadImages, loadedImages, initialPreloadQuantity, renderCanvas]);
+  }, [canvasRef, canvasLoader, renderCanvas, initialPreloadQuantity, lazyLoadImages, loadedImages]);
 
   return (
     <CanvasContainer width={width} height={height}>
